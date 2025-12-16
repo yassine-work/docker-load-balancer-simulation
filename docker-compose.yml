@@ -1,0 +1,19 @@
+services:
+  #Backend Service
+  app:
+    build: .
+    deploy:
+      replicas: 3  # we create 3 copies
+  # The Load Balancer Service
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"  # Opens port 8080 on your PC
+    depends_on:
+        - app
+
+
+
+
