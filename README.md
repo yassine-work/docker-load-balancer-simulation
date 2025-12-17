@@ -213,16 +213,14 @@ Request 4 → Server A (cycle repeats)
 
 ```nginx
 upstream backend {
-    server app-1:5000;
-    server app-2:5000;
-    server app-3:5000;
+    server app:5000;
 }
 
 server {
     listen 80;
     
     location / {
-        proxy_pass http://backend;
+         proxy_pass http://backend_servers;
     }
 }
 ```
@@ -231,19 +229,22 @@ server {
 
 ```yaml
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "8080:80"
-    networks:
-      - app-network
-      
+  #Backend Service
   app:
     build: .
     deploy:
-      replicas: 3
-    networks:
-      - app-network
+      replicas: 5  # we create 3 copies
+  # The Load Balancer Service
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"  # Opens port 8080 on your PC
+    depends_on:
+        - app
+
+
 ```
 
 ---
@@ -266,7 +267,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 <div align="center">
 
-**Built with ❤️ for learning distributed systems**
 
 [⬆ Back to Top](#-docker-load-balancer-simulation)
 

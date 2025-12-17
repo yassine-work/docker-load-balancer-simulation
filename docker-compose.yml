@@ -3,7 +3,7 @@ services:
   app:
     build: .
     deploy:
-      replicas: 3  # we create 3 copies
+      replicas: 5  # we create 3 copies
   # The Load Balancer Service
   nginx:
     image: nginx:latest
